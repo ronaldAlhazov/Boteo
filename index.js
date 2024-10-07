@@ -50,7 +50,7 @@ app.post("/whatsapp", (req, res) => {
   client.messages
     .create({
       from: process.env.WHATSAPP_NUMBER,
-      body: replyMessage, // The response message
+      contentSid: "HXca59e99a5b340d1fbd5ae27e35a71bba",
       to: senderNumber, // The sender's WhatsApp number
     })
     .then((message) => {
