@@ -47,6 +47,7 @@ async function createQuickReplyTemplate(userName) {
         actions: actions,
       },
     },
+    language: "he", // Specify Hebrew as the language
   };
 
   // Create the Quick Reply template
