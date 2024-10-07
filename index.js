@@ -1,70 +1,69 @@
 const express = require("express");
+
 const bodyParser = require("body-parser");
-const twilio = require("twilio");
-
+require("dotenv").config();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-// Middleware
+const accountSid = process.env.ACCOUNT_SID; // Use the environment variable
+const authToken = process.env.AUTH_TOKEN;
+const client = require("twilio")(accountSid, authToken);
+
+// Middleware to parse the body of incoming requests
 app.use(bodyParser.urlencoded({ extended: false }));
+app.get("/", (req, res) => {
+  replyMessage = "I didn't understand that. Can you please clarify?";
 
-// Endpoint for incoming messages
-app.post("/incoming", (req, res) => {
-  const messageBody = req.body.Body.trim();
-  const fromNumber = req.body.From;
+  // Send a reply message back to the user
+  client.messages
+    .create({
+      from: process.env.WHATSAPP_NUMBER,
+      contentSid: "HXca59e99a5b340d1fbd5ae27e35a71bba", // Your template SID
+      to: "whatsapp:+972509082982", // The sender's WhatsApp number
+    })
+    .then((message) => {
+      console.log("Message SID:", message.sid);
+      res.status(200).send("Reply sent successfully");
+    })
+    .catch((error) => {
+      console.error("Error sending reply:", error);
+      res.status(500).send("Failed to send reply");
+    });
+});
+// Endpoint to handle incoming WhatsApp messages from Twilio
+app.post("/whatsapp", (req, res) => {
+  const incomingMessage = req.body.Body; // The message from the user
+  const senderNumber = req.body.From; // The sender's WhatsApp number
 
-  // Create a response
-  const twiml = new twilio.twiml.MessagingResponse();
+  let replyMessage = "";
 
-  // Check the incoming message and respond with buttons
-  if (messageBody.toLowerCase() === "menu") {
-    twiml.message("Please choose an option:");
-    twiml.message(
-      new twilio.twiml.MessagingResponse()
-        .addButton("IT Support", 'Reply with "IT Support"')
-        .addButton("Logistics Support", 'Reply with "Logistics Support"')
-        .addButton("FAQs", 'Reply with "FAQs"')
-    );
-  } else if (messageBody.toLowerCase() === "it support") {
-    twiml.message("You selected IT Support. Please choose an option:");
-    twiml.message(
-      new twilio.twiml.MessagingResponse()
-        .addButton(
-          "Software Installation",
-          'Reply with "Software Installation"'
-        )
-        .addButton("Network Issue", 'Reply with "Network Issue"')
-        .addButton("Hardware Issue", 'Reply with "Hardware Issue"')
-    );
-  } else if (messageBody.toLowerCase() === "logistics support") {
-    twiml.message("You selected Logistics Support. Please choose an option:");
-    twiml.message(
-      new twilio.twiml.MessagingResponse()
-        .addButton("Track Shipment", 'Reply with "Track Shipment"')
-        .addButton(
-          "Request Transportation",
-          'Reply with "Request Transportation"'
-        )
-    );
-  } else if (messageBody.toLowerCase() === "faqs") {
-    twiml.message("You selected FAQs. Please choose:");
-    twiml.message(
-      new twilio.twiml.MessagingResponse()
-        .addButton("Company Wi-Fi Password", 'Reply with "Wi-Fi Password"')
-        .addButton("Request New Software", 'Reply with "Request Software"')
-    );
+  // Basic chatbot logic
+  if (incomingMessage.toLowerCase().includes("hello")) {
+    replyMessage = "Hi! How can I help you today?";
+  } else if (incomingMessage.toLowerCase().includes("bye")) {
+    replyMessage = "Goodbye! Have a great day!";
   } else {
-    twiml.message(
-      'I did not understand that. Reply with "menu" to see options.'
-    );
+    replyMessage = "I didn't understand that. Can you please clarify?";
   }
 
-  // Send the response
-  res.writeHead(200, { "Content-Type": "text/xml" });
-  res.end(twiml.toString());
+  // Send a reply message back to the user
+  client.messages
+    .create({
+      from: process.env.WHATSAPP_NUMBER,
+      body: replyMessage, // The response message
+      to: senderNumber, // The sender's WhatsApp number
+    })
+    .then((message) => {
+      console.log("Message SID:", message.sid);
+      res.status(200).send("Reply sent successfully");
+    })
+    .catch((error) => {
+      console.error("Error sending reply:", error);
+      res.status(500).send("Failed to send reply");
+    });
 });
 
-// Start the server
+// Start the Express server
 app.listen(port, () => {
-  console.log(`2nd Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
