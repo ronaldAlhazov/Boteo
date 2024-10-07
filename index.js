@@ -21,7 +21,7 @@ app.post("/whatsapp", (req, res) => {
         from: process.env.WHATSAPP_NUMBER,
         contentSid: "HX467eecf75bc96475ae1cf815990e51d6",
         contentVariables: JSON.stringify({
-          1: "ברוך הבא לboteo! אנא בחר אפשרות",
+          1: "ברוך הבא לboteo! \n אנא בחר אפשרות",
           2: "לוגיסטיקה",
           3: "IT",
         }),
@@ -40,7 +40,7 @@ app.post("/whatsapp", (req, res) => {
       client.messages
         .create({
           from: process.env.WHATSAPP_NUMBER,
-          contentSid: "HX8704fe946590fb7be428e4ceed4a5ceb", // Your Logistics template SID
+          contentSid: "HX8704fe946590fb7be428e4ceed4a5ceb",
           contentVariables: JSON.stringify({
             body: "בחר אחת מהאפשרויות ללוגיסטיקה:",
             listButton: "לוגיסטיקה",
@@ -48,10 +48,10 @@ app.post("/whatsapp", (req, res) => {
             "1Des": "נגמר החלב תיאור",
             2: "קוד לאוטו",
             "2Des": "קוד לאוטו",
-            3: "קוד לחניוןב",
-            "3Des": "נגמר החלב תיאור",
+            3: "קוד לחניון",
+            "3Des": "קוד לחניון תיאור",
             4: "חסר קפה",
-            "4Des": "נגמר החלב תיאור",
+            "4Des": "חסר קפה תיאור",
           }),
           to: senderNumber,
         })
@@ -71,15 +71,15 @@ app.post("/whatsapp", (req, res) => {
           contentSid: "HX8704fe946590fb7be428e4ceed4a5ceb", // Your Logistics template SID
           contentVariables: JSON.stringify({
             body: "בחר אחת מהאפשרויות לit:",
-            listButton: "לוגיסטיקה",
-            1: "נגמר החלב",
-            "1Des": "נגמר החלב תיאור",
-            2: "קוד לאוטו",
-            "2Des": "קוד לאוטו",
-            3: "קוד לחניוןב",
-            "3Des": "נגמר החלב תיאור",
-            4: "חסר קפה",
-            "4Des": "נגמר החלב תיאור",
+            listButton: "IT",
+            1: "איפוס סיסמא",
+            "1Des": "איך לאפס סיסמא",
+            2: "כניסת למחשב",
+            "2Des": "לא מצליח/ה להיכנס למחשב",
+            3: "התחברות למסך",
+            "3Des": "apple mirror screen",
+            4: "WIFI",
+            "4Des": "מה הסיסמא לwifi?",
           }),
           to: senderNumber,
         })
