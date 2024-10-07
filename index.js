@@ -16,23 +16,15 @@ app.post("/whatsapp", (req, res) => {
   const senderNumber = req.body.From;
 
   let replyMessage = "";
-  if (incomingMessage.toLowerCase().includes("hello")) {
-    replyMessage = "Hi! How can I help you today?";
-  } else if (incomingMessage.toLowerCase().includes("bye")) {
-    replyMessage = "Goodbye! Have a great day!";
-  } else {
-    replyMessage = "I didn't understand that. Can you please clarify?";
-  }
 
   client.messages
     .create({
       from: process.env.WHATSAPP_NUMBER,
       contentSid: "HX8c34529e9fdbd104c19da05da7628706",
       contentVariables: JSON.stringify({
-        1: "Body", // Replaces {{1}}
-        2: "Option 2 Text", // Replaces {{2}}
-        3: "Option 3 Text", // Replaces {{3}}
-        4: "Option 4 Text", // Replaces {{4}}
+        1: "ברוך הבא לboteo! אנא בחר אפשרות",
+        2: "פתיחת פנייה", // Replaces {{2}}
+        3: "שאלות נפוצות", // Replaces {{3}}
       }),
       to: senderNumber,
     })
